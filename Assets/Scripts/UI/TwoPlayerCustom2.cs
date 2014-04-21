@@ -113,13 +113,6 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		ChangeSecondaryPlayer1();
 		//ChangePrimaryPlayer2();
 		//ChangeSecondaryPlayer2();
-
-//		UpdateParts (1);
-//		UpdateParts (2);
-
-
-		AddRobot (1, "Salsa");
-		AddRobot (2, "Salsa");
 	}
 
 	void ChangePrimaryPlayer1()
@@ -129,7 +122,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		{
 			player1Primary = 0;
 		}
-		Utility.SetPrimary(robo1.gameObject, colors[player1Primary]);
+		Utility.SetPrimary(player1Robot.gameObject, colors[player1Primary]);
 		SetTexture(2, colors[player1Primary]);
 	}
 
@@ -140,7 +133,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		{
 			player1Secondary = 0;
 		}
-		Utility.SetSecondary(robo1.gameObject, colors[player1Secondary]);
+		Utility.SetSecondary(player1Robot.gameObject, colors[player1Secondary]);
 		SetTexture(3, colors[player1Secondary]);
 	}
 
@@ -151,7 +144,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		{
 			player2Primary = 0;
 		}
-		Utility.SetPrimary(robo2.gameObject, colors[player2Primary]);
+		Utility.SetPrimary(player2Robot.gameObject, colors[player2Primary]);
 		SetTexture(4, colors[player2Primary]);
 	}
 	
@@ -162,7 +155,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		{
 			player2Secondary = 0;
 		}
-		Utility.SetSecondary(robo2.gameObject, colors[player2Secondary]);
+		Utility.SetSecondary(player2Robot.gameObject, colors[player2Secondary]);
 		SetTexture(5, colors[player2Secondary]);
 	}
 
@@ -547,7 +540,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			player2Robot.layer = LayerMask.NameToLayer ("Player2");
 			foreach (Transform child in player2Robot.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player2");
 			
-			UpdateParts(1);
+			UpdateParts(2);
 		}
 	}
 
