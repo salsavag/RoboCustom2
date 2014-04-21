@@ -1,18 +1,40 @@
 fileFormatVersion: 2
-guid: 1c18a343f1da14d329801dfd70d495f6
+guid: e6aae2c9b96d74e9f97155fa37da673a
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: pCylinder1
-    100002: //RootNode
-    400000: pCylinder1
-    400002: //RootNode
-    2300000: pCylinder1
-    2300002: //RootNode
-    3300000: pCylinder1
-    3300002: //RootNode
+    100000: //RootNode
+    100002: pCube1
+    100004: pCube10
+    100006: pCube13
+    100008: pCube14
+    100010: pCube2
+    100012: pCube9
+    400000: //RootNode
+    400002: pCube1
+    400004: pCube10
+    400006: pCube13
+    400008: pCube14
+    400010: pCube2
+    400012: pCube9
+    2300000: pCube1
+    2300002: pCube10
+    2300004: pCube13
+    2300006: pCube14
+    2300008: pCube2
+    2300010: pCube9
+    3300000: pCube1
+    3300002: pCube10
+    3300004: pCube13
+    3300006: pCube14
+    3300008: pCube2
+    3300010: pCube9
     4300000: pCube1
-    4300002: pCylinder1
+    4300002: pCube2
+    4300004: pCube9
+    4300006: pCube10
+    4300008: pCube13
+    4300010: pCube14
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -32,7 +54,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: .00999999978
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
