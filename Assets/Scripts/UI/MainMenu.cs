@@ -12,6 +12,10 @@ public class MainMenu : MonoBehaviour {
 	private float buttonOffset;
 	private float x_offset;
 	private float y_offset;
+
+	public Texture background;
+
+	public GUISkin skin;
 	
 	// Use this for initialization
 	void Start () {
@@ -19,7 +23,7 @@ public class MainMenu : MonoBehaviour {
 		LogoStyle = new GUIStyle ();
 		LogoStyle.fontSize = 20;
 
-		gameName = "Augment: Robots";
+		gameName = "RoboCustom";
 
 		x_offset = 20.0f;
 		y_offset = 20.0f;
@@ -30,15 +34,16 @@ public class MainMenu : MonoBehaviour {
 
 	void OnGUI()
 	{
+		GUI.skin = skin;
+		GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), background);
+
 		if(GUI.Button (new Rect(x_offset, Screen.height / 2.0f - buttonOffset - buttonWidth - buttonWidth / 2.0f, buttonLength, buttonWidth), "Battle"))
 		{
-			Camera.main.gameObject.AddComponent<CharacterSelect>();
-			Destroy(Camera.main.GetComponent<MainMenu>());
+			Application.LoadLevel("Customize");
 		}
-		if(GUI.Button (new Rect(x_offset, Screen.height / 2.0f - buttonWidth / 2.0f, buttonLength, buttonWidth), "Customize"))
+		if(GUI.Button (new Rect(x_offset, Screen.height / 2.0f - buttonWidth / 2.0f, buttonLength, buttonWidth), "Instructions"))
 		{
-			Camera.main.gameObject.AddComponent<CustomizeScreen>();
-			Destroy(Camera.main.GetComponent<MainMenu>());
+			Application.LoadLevel("Instructions");
 		}
 		if(GUI.Button (new Rect(x_offset, Screen.height / 2.0f + buttonOffset + buttonWidth - buttonWidth / 2.0f, buttonLength, buttonWidth), "Quit"))
 		{

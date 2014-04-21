@@ -330,6 +330,17 @@ public class TwoPlayerCustom2 : MonoBehaviour
 
 		GUI.DrawTexture(cameraOverlay1, overlay);
 		GUI.DrawTexture (cameraOverlay2, overlay);
+
+		if (GUI.Button (new Rect (Screen.width - buttonWidth - buttonSpacing , Screen.height - buttonHeight - buttonSpacing, buttonWidth, buttonHeight), "Back"))
+		{
+			Application.LoadLevel("MainMenu");
+		}
+
+		if (GUI.Button (new Rect (Screen.width - buttonWidth - buttonSpacing , Screen.height - buttonHeight *2 - buttonSpacing * 2, buttonWidth, buttonHeight), "Play"))
+		{
+			Application.LoadLevel("Game");
+		}
+
 		// ---------------------------------------------------------------------------------------------------------------------------
 		//Top Left Quadrant
 		GUI.BeginGroup (new Rect (bufferArea / 2, bufferArea / 2, Screen.width / 2 - bufferArea, Screen.height / 2 - bufferArea));
