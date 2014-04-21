@@ -107,7 +107,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		}
 
 		AddRobot (1, "Astro");
-		AddRobot (2, "Salsa");
+		AddRobot (2, "Astro");
 
 		ChangePrimaryPlayer1();
 		ChangeSecondaryPlayer1();
@@ -363,6 +363,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			{
 				player1SelectedType = (SelectedArea)(i);
 				player1Picking = true;
+				player2Picking = false;
 			}
 		}
 		GUI.EndGroup();
@@ -419,6 +420,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 						{
 							player1SelectedParts[i] = j;
 							player1Picking = true;
+							player2Picking = false;
 							string partName = partLists[i - 1][player1SelectedParts[i]].partName;
 							Debug.Log ("Player 1 selected " + partLists[i - 1][player1SelectedParts[i]].partName);
 
@@ -480,8 +482,161 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		// End Top Left Quadrant
 		GUI.EndGroup();
 
+
+
 		//---------------------------------------------------------------------------------------------------------------------------------------
 		// Bottom Left Quad
+		GUI.BeginGroup (new Rect (bufferArea / 2, Screen.height / 2 + bufferArea / 2, Screen.width / 2 - bufferArea, Screen.height / 2 - bufferArea));
+		GUI.Box (new Rect (0, 0, Screen.width / 2 - bufferArea, Screen.height / 2 - bufferArea), "");
+		GUI.Label (new Rect (3 * bufferArea + buttonWidth, 0, buttonWidth, buttonHeight), EnumStrings[(int)player2SelectedType]);
+		
+		// part types
+		GUI.BeginGroup (new Rect (bufferArea, bufferArea, buttonWidth, buttonHeight * 4 + bufferArea * 3));
+		//GUI.Box (new Rect (0, 0, buttonWidth, buttonHeight * 4 + buttonSpacing * 3), "");
+		
+		for(int i = 1; i < 5; i++)
+		{
+			bool clicked = false;
+			if((SelectedArea)(i) == player2SelectedType)
+			{
+				clicked = GUI.Button(new Rect(0,
+				                              (buttonSpacing + buttonHeight) * (i - 1),
+				                              buttonWidth,
+				                              buttonHeight),
+				                     EnumStrings[i],
+				                     skin.customStyles[0]);
+			}
+			else
+			{
+				clicked = GUI.Button(new Rect(0,
+				                              (buttonSpacing + buttonHeight) * (i - 1),
+				                              buttonWidth,
+				                              buttonHeight),
+				                     EnumStrings[i]);
+			}
+			if(clicked)
+			{
+				player2SelectedType = (SelectedArea)(i);
+				player2Picking = true;
+				player1Picking = false;
+			}
+		}
+		GUI.EndGroup();
+		
+		// parts selected
+		GUI.BeginGroup (new Rect (Screen.width / 6, bufferArea, buttonWidth + buttonSpacing * 2, buttonHeight * 5 + bufferArea * 4));
+		//GUI.Box (new Rect (0, 0, buttonWidth + buttonSpacing * 2, buttonHeight * 4 + buttonSpacing * 3), "");
+		for(int i = 1; i < 5; i++)
+		{
+			string partname = partLists[i - 1][player2SelectedParts[i]].partName;
+			GUI.Button(new Rect(0,
+			                    (buttonSpacing + buttonHeight) * (i -1),
+			                    buttonWidth,
+			                    buttonHeight),
+			           partname,
+			           skin.customStyles[1]);
+		}
+		GUI.EndGroup();
+		
+		// part options
+		GUI.BeginGroup (new Rect ((int)(Screen.width / 3.05), bufferArea - buttonSpacing / 2, buttonWidth + buttonSpacing * 1, buttonHeight * 4 + buttonSpacing * 3 + buttonSpacing));
+		GUI.Box (new Rect (0, 0, buttonWidth + buttonSpacing * 1, buttonHeight * 4 + buttonSpacing * 3 + buttonSpacing), "");
+		if (player2SelectedType == SelectedArea.Selector) {
+			
+		}
+		else
+		{
+			for(int i = 1; i < 5; i++)
+			{
+				if(player2SelectedType == (SelectedArea)(i))
+				{
+					List<PartData> parts = partLists[i - 1];
+					for(int j = 0; j < parts.Count; j++)
+					{
+						bool clicked = false;
+						if(player2Picking && player2SelectedParts[i] == j)
+						{
+							clicked = GUI.Button(new Rect(buttonSpacing / 2,
+							                              buttonSpacing / 2 + (buttonSpacing + buttonHeight) * (j),
+							                              buttonWidth,
+							                              buttonHeight),
+							                     parts[j].partName,
+							                     skin.customStyles[0]);
+						}
+						else
+						{
+							clicked = GUI.Button(new Rect(buttonSpacing / 2,
+							                              buttonSpacing / 2 + (buttonSpacing + buttonHeight) * (j),
+							                              buttonWidth,
+							                              buttonHeight),
+							                     parts[j].partName);
+						}
+						if(clicked)
+						{
+							player2SelectedParts[i] = j;
+							player2Picking = true;
+							player1Picking = false;
+							string partName = partLists[i - 1][player2SelectedParts[i]].partName;
+							Debug.Log ("Player 2 selected " + partLists[i - 1][player2SelectedParts[i]].partName);
+							
+							// new body
+							if(i == 1)
+							{
+								AddRobot(2, partName);
+							}
+							
+							// left arm
+							if(i == 2)
+							{
+								AddItemToRobot(2, "left_arm", "LeftWeapon", partName);
+							}
+							
+							// right arm
+							if(i == 3)
+							{
+								AddItemToRobot(2, "right_arm", "RightWeapon", partName);
+							}
+							
+							// special
+							if(i == 4)
+							{
+								RemoveSpecial(2);
+								if(partName == "Wings") AddItemToRobot(2, "body", "Wings", partName);
+								if(partName == "Armor") AddItemToRobot(2, "body", "Armor", partName);
+								if(partName == "Booster") AddItemToRobot(2, "body", "Wings", partName);
+							}
+						}
+					}
+					break;
+				}
+			}
+		}
+		GUI.EndGroup();
+		string description2 = "";
+		string name2 = "";
+		if(player2SelectedType != SelectedArea.Selector && player2Picking)
+		{
+			name2 = partLists[(int)(player2SelectedType) - 1][player2SelectedParts[(int)player2SelectedType]].partName;
+			description2 = partLists[(int)(player2SelectedType) - 1][player2SelectedParts[(int)player2SelectedType]].description;
+		}
+		
+		GUI.BeginGroup(new Rect (Screen.width / 6, bufferArea + (buttonSpacing + buttonHeight) * 4, boxWidth, boxHeight));
+		GUI.Box (new Rect (0, 0, boxWidth, boxHeight), name2);
+		GUI.Label(new Rect (buttonSpacing / 2, buttonSpacing * 2, boxWidth - buttonSpacing, boxHeight - buttonSpacing * 2), description2);
+		GUI.EndGroup();
+		
+		// colors
+		GUI.BeginGroup(new Rect (bufferArea, bufferArea + (buttonSpacing + buttonHeight) * 4, buttonWidth, boxHeight));
+		GUI.Box (new Rect (0, 0, buttonWidth, boxHeight), "Colors");
+		GUI.Label(new Rect (buttonSpacing / 2, buttonSpacing * 2, buttonWidth /2 , buttonHeight), "Primary");
+		GUI.Box  (new Rect (buttonWidth / 2 + buttonSpacing, buttonSpacing * 2, buttonWidth / 3 , buttonHeight / 2), "", skin.customStyles[2]);
+		GUI.Label(new Rect (buttonSpacing / 2, buttonSpacing * 4, buttonWidth /2 , buttonHeight), "Secondary");
+		GUI.Box  (new Rect (buttonWidth / 2 + buttonSpacing, buttonSpacing * 4, buttonWidth / 3 , buttonHeight / 2), "", skin.customStyles[3]);
+		GUI.EndGroup();
+		
+		// End Top Left Quadrant
+		GUI.EndGroup();
+
 		// End Bottom Left Quad
 	}
 
@@ -516,12 +671,15 @@ public class TwoPlayerCustom2 : MonoBehaviour
 
 			if(partName == "Astro") player1Robot.transform.position = new Vector3(0,-6,0);
 			else if(partName == "Salsa") player1Robot.transform.position = new Vector3(0,-10,0);
-			else if(partName == "HummingBird") player1Robot.transform.position = new Vector3(0,-6,0);
+			//else if(partName == "HummingBird") player1Robot.transform.position = new Vector3(0,-6,0);
 			else if(partName == "Matron") player1Robot.transform.position = new Vector3(0,-10,0);
 
 			player1Robot.layer = LayerMask.NameToLayer ("Player1");
-			foreach (Transform child in player1Robot.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player1");
-
+			foreach (Transform child in player1Robot.transform)
+			{
+				child.gameObject.layer = LayerMask.NameToLayer ("Player1");
+				foreach(Transform child2 in child) child2.gameObject.layer = LayerMask.NameToLayer ("Player1");
+			}
 			UpdateParts(1);
 		}
 		else
@@ -533,12 +691,15 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			
 			if(partName == "Astro") player2Robot.transform.position = new Vector3(0,-6,0);
 			else if(partName == "Salsa") player2Robot.transform.position = new Vector3(0,-10,0);
-			else if(partName == "HummingBird") player2Robot.transform.position = new Vector3(0,-6,0);
+			//else if(partName == "HummingBird") player2Robot.transform.position = new Vector3(0,-6,0);
 			else if(partName == "Matron") player2Robot.transform.position = new Vector3(0,-10,0);
 			
 			player2Robot.layer = LayerMask.NameToLayer ("Player2");
-			foreach (Transform child in player2Robot.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player2");
-			
+			foreach (Transform child in player2Robot.transform)
+			{
+				child.gameObject.layer = LayerMask.NameToLayer ("Player2");
+				foreach(Transform child2 in child) child2.gameObject.layer = LayerMask.NameToLayer ("Player2");
+			}
 			UpdateParts(2);
 		}
 	}
