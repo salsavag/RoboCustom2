@@ -10,6 +10,10 @@ public class IdleRobot : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!this.animation.isPlaying) this.animation.Play ("Idle");
+		if(animation["Idel"])
+		{
+			if(!animation.IsPlaying("Idle"))
+				this.animation.Play ("Idle");
+		}
 	}
 }

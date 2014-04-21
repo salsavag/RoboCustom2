@@ -237,18 +237,6 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		{
 			ChangeSecondaryPlayer1();
 		}
-
-
-		if(Input.GetKeyDown("OSX LJoyV"))
-		{
-			Debug.Log("poop");
-		}
-
-		if(Input.GetKeyDown("OSX LJoyH"))
-		{
-			Debug.Log("poop");
-		}
-
 	}
 
 	void Player2Input()
