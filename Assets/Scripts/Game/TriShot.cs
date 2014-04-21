@@ -3,16 +3,16 @@ using System.Collections;
 
 public class TriShot : Weapon {
 
-	bool secondShot;
-	bool thirdShot;
+	bool secondShot = true;
+	bool thirdShot = true;
 
 	protected override void Start () {
 		base.Start();
 		projSpeed = 40.0f;
 		damage = 20.0f;
 		fireRate = 2.0f;
-		thirdShot = false;
-		secondShot = false;
+		thirdShot = true;
+		secondShot = true;
 	}
 
 	protected override void Update () {

@@ -17,6 +17,14 @@ public class Controllers : MonoBehaviour
 								  "LJoyH", "LJoyV", "RJoyH", "RJoyV",
 								  "LBump", "RBump", "Start"};
 
+	public Transform robo;
+	
+	public Robo robo1;
+	public Robo robo2;
+
+	Vector3 startPos1 = new Vector3(-25, 8, 25);
+	Vector3 startPos2 = new Vector3(25, 8, -25);
+
 	void Start ()
 	{
 		inputs1 = new float[13];
@@ -26,10 +34,31 @@ public class Controllers : MonoBehaviour
 		inputs2 = new float[13];
 		timedInputs2 = new float[13];
 		timers2 = new float[13];
-	}
 
-	public Robo robo1;
-	public Robo robo2;
+		Transform newRobo = Instantiate(robo, startPos1, Quaternion.identity) as Transform;
+		robo1 = newRobo.GetComponent<Robo>();
+
+		newRobo = Instantiate(robo, startPos2, Quaternion.identity) as Transform;
+		robo2 = newRobo.GetComponent<Robo>();
+
+
+
+		robo1.CustomizeRobot(Utility.player1Body,
+		                     Utility.player1LeftWeapon,
+		                     Utility.player1RightWeapon,
+		                     Utility.player1Special,
+		                     Utility.player1Primary,
+		                     Utility.player1Secondary,
+		                     robo2.transform);
+
+		robo2.CustomizeRobot(Utility.player2Body,
+		                     Utility.player2LeftWeapon,
+		                     Utility.player2RightWeapon,
+		                     Utility.player2Special,
+		                     Utility.player2Primary,
+		                     Utility.player2Secondary,
+		                     robo1.transform);
+	}
 
 	void Update ()
 	{
@@ -53,11 +82,21 @@ public class Controllers : MonoBehaviour
 		
 		if(Input.GetKey(KeyCode.Comma))
 			robo2.FireLeft();
-		
-		robo2.Move(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
+
+		Vector3 cameraForward = transform.forward;
+		cameraForward.y = 0;
+		cameraForward.Normalize();
+		float angle = Vector3.Angle(Vector3.forward, cameraForward);
+		if(Vector3.Cross(Vector3.forward, cameraForward).y < 0)
+		{
+			angle = -angle;
+		}
+		Vector3 playerMove = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+		playerMove = Quaternion.AngleAxis(angle, Vector3.up) * playerMove;
+		robo2.Move(playerMove);
 		
 		if(Input.GetKey (KeyCode.Q) || Input.GetKey (KeyCode.E))
-			robo2.Thrust(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
+			robo2.Thrust(playerMove);
 	}
 
 	void GetControllers()
@@ -74,10 +113,12 @@ public class Controllers : MonoBehaviour
 			robo1.FireRight();
 		if(LTrig1 != 0.0f  && LTrig1 != -1.0f)
 			robo1.FireLeft();
-		robo1.Move(new Vector3(LJoyH1, 0, LJoyV1));
+
+		Vector3 player1Move = Quaternion.AngleAxis(transform.rotation.y, Vector3.up) * new Vector3(LJoyH1, 0, LJoyV1);
+		robo1.Move(player1Move);
 
 		if(RBump1 != 0.0f || LBump1 != 0.0f)
-			robo1.Thrust(new Vector3(LJoyH1, 0, LJoyV1));
+			robo1.Thrust(player1Move);
 
 		if(A2 != 0.0f)
 			robo2.Jump();
@@ -85,17 +126,19 @@ public class Controllers : MonoBehaviour
 			robo2.FireRight();
 		if(LTrig2 != 0.0f  && LTrig2 != -1.0f)
 			robo2.FireLeft();
-		robo2.Move(new Vector3(LJoyH2, 0, LJoyV2));
+
+		Vector3 player2Move = Quaternion.AngleAxis(transform.rotation.y, Vector3.up) * new Vector3(LJoyH2, 0, LJoyV2);
+		robo2.Move(player2Move);
 		
 		if(RBump2 != 0.0f || LBump2 != 0.0f)
-			robo2.Thrust(new Vector3(LJoyH2, 0, LJoyV2));
+			robo2.Thrust(player2Move);
 	}
 
 	void GetOSXInputsXbox()
 	{
-		Debug.Log ("Input A1 :" + Input.GetAxis("OSX Xbox A1"));
+		//Debug.Log ("Input A1 :" + Input.GetAxis("OSX Xbox A1"));
 		A1 = Input.GetAxis("OSX Xbox A1");
-		Debug.Log ("Reading A1 :" + A1);
+		//Debug.Log ("Reading A1 :" + A1);
 		B1 = Input.GetAxis("OSX Xbox B1");
 		X1 = Input.GetAxis("OSX Xbox X1");
 		Y1 = Input.GetAxis("OSX Xbox Y1");
