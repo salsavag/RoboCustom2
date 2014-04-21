@@ -518,7 +518,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			if(partName == "Astro") player1Robot.transform.position = new Vector3(0,-6,0);
 			else if(partName == "Salsa") player1Robot.transform.position = new Vector3(0,-10,0);
 			else if(partName == "HummingBird") player1Robot.transform.position = new Vector3(0,-6,0);
-			else if(partName == "Matron") player1Robot.transform.position = new Vector3(0,-6,0);
+			else if(partName == "Matron") player1Robot.transform.position = new Vector3(0,-10,0);
 
 			player1Robot.layer = LayerMask.NameToLayer ("Player1");
 			foreach (Transform child in player1Robot.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player1");
@@ -535,7 +535,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			if(partName == "Astro") player2Robot.transform.position = new Vector3(0,-6,0);
 			else if(partName == "Salsa") player2Robot.transform.position = new Vector3(0,-10,0);
 			else if(partName == "HummingBird") player2Robot.transform.position = new Vector3(0,-6,0);
-			else if(partName == "Matron") player2Robot.transform.position = new Vector3(0,-6,0);
+			else if(partName == "Matron") player2Robot.transform.position = new Vector3(0,-10,0);
 			
 			player2Robot.layer = LayerMask.NameToLayer ("Player2");
 			foreach (Transform child in player2Robot.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player2");
