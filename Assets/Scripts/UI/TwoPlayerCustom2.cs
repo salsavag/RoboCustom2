@@ -63,6 +63,8 @@ public class TwoPlayerCustom2 : MonoBehaviour
 	private Texture secondary2;
 
 	public Transform body1;
+	public Transform body2;
+	public Transform body3;
 	// Use this for initialization
 	void Start ()
 	{
@@ -424,6 +426,8 @@ public class TwoPlayerCustom2 : MonoBehaviour
 							                              buttonWidth,
 							                              buttonHeight),
 							                     parts[j].partName);
+
+							Debug.Log ("Clicked: " + clicked.ToString());
 						}
 						if(clicked)
 						{
@@ -678,11 +682,19 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			player1Robot = (GameObject) Instantiate(Resources.Load ("Body/" + partName),
 			                                       Vector3.zero, Quaternion.identity);
 
-			if(partName == "Astro") player1Robot.transform.position = new Vector3(0,-6,0);
-			else if(partName == "Salsa") player1Robot.transform.position = new Vector3(0,-10,0);
+			if(partName == "Astro"){
+				player1Robot.transform.position = new Vector3(0,-6,0);
+				Utility.player1Body = body1;
+			}
+			else if(partName == "Salsa"){
+				player1Robot.transform.position = new Vector3(0,-12,0);
+				Utility.player1Body = body2;
+			}
 			//else if(partName == "HummingBird") player1Robot.transform.position = new Vector3(0,-6,0);
-			else if(partName == "Matron") player1Robot.transform.position = new Vector3(0,-10,0);
-
+			else if(partName == "Matron"){
+				player1Robot.transform.position = new Vector3(0,-10,0);
+				Utility.player1Body = body3;
+			}
 			player1Robot.layer = LayerMask.NameToLayer ("Player1");
 			foreach (Transform child in player1Robot.transform)
 			{
@@ -702,11 +714,20 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			player2Robot = (GameObject) Instantiate(Resources.Load ("Body/" + partName),
 			                                        Vector3.zero, Quaternion.identity);
 			
-			if(partName == "Astro") player2Robot.transform.position = new Vector3(0,-6,0);
-			else if(partName == "Salsa") player2Robot.transform.position = new Vector3(0,-10,0);
+			if(partName == "Astro") {
+				player2Robot.transform.position = new Vector3(0,-6,0);
+				Utility.player2Body = body1;
+			}
+			else if(partName == "Salsa") {
+				player2Robot.transform.position = new Vector3(0,-12,0);
+				Utility.player2Body = body2;
+			}
 			//else if(partName == "HummingBird") player2Robot.transform.position = new Vector3(0,-6,0);
-			else if(partName == "Matron") player2Robot.transform.position = new Vector3(0,-10,0);
-			
+			else if(partName == "Matron"){
+				player2Robot.transform.position = new Vector3(0,-10,0);
+				Utility.player2Body = body3;
+			}
+
 			player2Robot.layer = LayerMask.NameToLayer ("Player2");
 			foreach (Transform child in player2Robot.transform)
 			{
@@ -817,10 +838,34 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		// set camera layer
 		if (robotNum == 1) {
 			weap.layer = LayerMask.NameToLayer ("Player1");
-			foreach (Transform child in weap.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player1");
+			List<Transform>childsOfGameobject = new List<Transform>();
+			childsOfGameobject.Add(weap.transform);
+			
+			while(childsOfGameobject.Count > 0)
+			{	
+				Transform front = childsOfGameobject[0];
+				childsOfGameobject.RemoveAt(0);
+				front.gameObject.layer = LayerMask.NameToLayer ("Player1");
+				foreach (Transform trans in front)
+				{
+					childsOfGameobject.Add (trans);
+				}
+			}
 		} else {
 			weap.layer = LayerMask.NameToLayer ("Player2");
-			foreach(Transform child in weap.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player2");
+			List<Transform>childsOfGameobject = new List<Transform>();
+			childsOfGameobject.Add(weap.transform);
+			
+			while(childsOfGameobject.Count > 0)
+			{	
+				Transform front = childsOfGameobject[0];
+				childsOfGameobject.RemoveAt(0);
+				front.gameObject.layer = LayerMask.NameToLayer ("Player2");
+				foreach (Transform trans in front)
+				{
+					childsOfGameobject.Add (trans);
+				}
+			}
 		}
 		Debug.Log ("Created.");
 	}

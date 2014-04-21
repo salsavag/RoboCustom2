@@ -21,7 +21,7 @@ public class Robo : MonoBehaviour
 	int Special;
 	int Body;
 
-	float health;
+	public float health;
 	bool thrusting;
 	float thrustTimer;
 	float thrustStart;
