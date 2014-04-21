@@ -17,6 +17,8 @@ public class HUD : MonoBehaviour {
 
 	public bool paused;
 
+	public GUISkin skin;
+
 	// Use this for initialization
 	void Start () {
 		buttonWidth = Screen.width * .4f - spacing * 2;
@@ -33,13 +35,21 @@ public class HUD : MonoBehaviour {
 		}
 		if (Input.GetKeyDown (KeyCode.P))
 		{
-			Pause();
+			if(paused) UnPause();
+			else Pause();
 		}
 	}
 
 	public void Pause()
 	{
 		paused = true;
+		Time.timeScale = 0.0f;
+	}
+
+	public void UnPause ()
+	{
+		Time.timeScale = 1.0f;
+		paused = false;
 	}
 
 	public void TakeDamagePlayer1(float amount)
@@ -56,6 +66,8 @@ public class HUD : MonoBehaviour {
 
 	void OnGUI()
 	{
+		GUI.skin = skin;
+
 		GUI.DrawTexture (new Rect (spacing/2, spacing/2, (Screen.width - 4 * spacing) / 2 + spacing, spacing * 2 + spacing), overlay);
 		GUI.DrawTexture (new Rect (Screen.width - spacing/2 - (Screen.width - 4*spacing) / 2 - spacing, spacing/2, (Screen.width - 4*spacing) / 2 + spacing, spacing*2 + spacing ), overlay);
 
@@ -71,7 +83,7 @@ public class HUD : MonoBehaviour {
 			GUI.Box (new Rect(0,0,Screen.width * .4f, Screen.height * .2f), "Pause Menu");
 			if(GUI.Button (new Rect(spacing, spacing * 3, buttonWidth, buttonHeight), "Resume"))
 			{
-				paused = false;
+				UnPause();
 			}
 			if(GUI.Button (new Rect(spacing, spacing * 4 + buttonHeight, buttonWidth, buttonHeight), "Quit"))
 			{
