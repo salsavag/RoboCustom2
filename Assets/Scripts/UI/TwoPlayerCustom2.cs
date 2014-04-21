@@ -49,7 +49,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 
 	private List<List<PartData>> partLists;
 
-	private List<Color> colors = new List<Color>();
+	private List<Color> colors;
 	private int player1Primary;
 	private int player1Secondary;
 
@@ -62,6 +62,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 	private Texture primary2;
 	private Texture secondary2;
 
+	public Transform body1;
 	// Use this for initialization
 	void Start ()
 	{
@@ -77,16 +78,8 @@ public class TwoPlayerCustom2 : MonoBehaviour
 		}
 
 		// Colors
-		colors.Add(Color.white);
-		colors.Add(Color.red);
-		colors.Add(new Color(1.0f, 130.0f/255.0f, 0)); // orange
-		colors.Add(Color.yellow);
-		colors.Add(new Color(0.0f, 0.7f, 0.0f)); // green
-		colors.Add(Color.cyan);
-		colors.Add(new Color(0.0f, 56f/255f, 128.0f/255f)); // blue
-		colors.Add(Color.magenta);
-		colors.Add(Color.black);
-		colors.Add(Color.gray);
+		Utility.SetColors();
+		colors = Utility.colors;
 
 		Random.seed = (int)(Time.realtimeSinceStartup * 100000000);
 		player1Primary = 0;
@@ -105,6 +98,18 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			player2Primary = (int)Random.Range(0.0f, colors.Count) % colors.Count;
 			player2Secondary = (int)Random.Range(0.0f, colors.Count) % colors.Count;
 		}
+
+
+		Utility.player1Body = body1;
+		Utility.player1LeftWeapon = partLists[1][0].transform;
+		Utility.player1RightWeapon = partLists[2][0].transform;
+		Utility.player1Special = partLists[3][0].transform;
+
+		Utility.player2Body = body1;
+		Utility.player2LeftWeapon = partLists[1][0].transform;
+		Utility.player2RightWeapon = partLists[2][0].transform;
+		Utility.player2Special = partLists[3][0].transform;
+
 
 		AddRobot (1, "Astro");
 		AddRobot (2, "Salsa");
@@ -326,6 +331,10 @@ public class TwoPlayerCustom2 : MonoBehaviour
 
 		if (GUI.Button (new Rect (Screen.width - buttonWidth - buttonSpacing , Screen.height - buttonHeight *2 - buttonSpacing * 2, buttonWidth, buttonHeight), "Play"))
 		{
+			Utility.player1Primary = player1Primary;
+			Utility.player1Secondary = player1Secondary;
+			Utility.player2Primary = player2Primary;
+			Utility.player2Secondary = player2Secondary;
 			Application.LoadLevel("Game");
 		}
 
@@ -520,8 +529,13 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			else if(partName == "Matron") player1Robot.transform.position = new Vector3(0,-10,0);
 
 			player1Robot.layer = LayerMask.NameToLayer ("Player1");
-			foreach (Transform child in player1Robot.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player1");
+			foreach (Transform child in player1Robot.transform)
+				child.gameObject.layer = LayerMask.NameToLayer ("Player1");
 
+			player1Secondary--;
+			player1Primary--;
+			ChangePrimaryPlayer1();
+			ChangeSecondaryPlayer1();
 			UpdateParts(1);
 		}
 		else
@@ -537,8 +551,13 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			else if(partName == "Matron") player2Robot.transform.position = new Vector3(0,-10,0);
 			
 			player2Robot.layer = LayerMask.NameToLayer ("Player2");
-			foreach (Transform child in player2Robot.transform) child.gameObject.layer = LayerMask.NameToLayer ("Player2");
-			
+			foreach (Transform child in player2Robot.transform)
+				child.gameObject.layer = LayerMask.NameToLayer ("Player2");
+
+			player2Secondary--;
+			player2Primary--;
+			ChangePrimaryPlayer2();
+			ChangeSecondaryPlayer2();
 			UpdateParts(2);
 		}
 	}
@@ -550,18 +569,21 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			Debug.Log ("Updating robot components for player 1");
 			for(int i = 2; i < 5; i++)
 			{
-				string partName = partLists[i - 1][player1SelectedParts[i]].partName;
+				PartData part = partLists[i - 1][player1SelectedParts[i]];
+				string partName = part.partName;
 				Debug.Log ("Adding " + partName);
 
 				if(i == 2)
 				{
 					AddItemToRobot(1, "left_arm", "LeftWeapon", partName);
+					Utility.player1LeftWeapon = part.gameObject.transform;
 				}
 				
 				// right arm
 				if(i == 3)
 				{
 					AddItemToRobot(1, "right_arm", "RightWeapon", partName);
+					Utility.player1RightWeapon = part.gameObject.transform;
 				}
 				
 				// special
@@ -571,6 +593,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 					if(partName == "Wings") AddItemToRobot(1, "body", "Wings", partName);
 					if(partName == "Armor") AddItemToRobot(1, "body", "Armor", partName);
 					if(partName == "Booster") AddItemToRobot(1, "body", "Wings", partName);
+					Utility.player1Special = part.gameObject.transform;
 				}
 			}
 		}
@@ -579,18 +602,21 @@ public class TwoPlayerCustom2 : MonoBehaviour
 			Debug.Log ("Updating robot components for player 2");
 			for(int i = 2; i < 5; i++)
 			{
-				string partName = partLists[i - 1][player2SelectedParts[i]].partName;
+				PartData part = partLists[i - 1][player2SelectedParts[i]];
+				string partName = part.partName;
 				Debug.Log ("Adding " + partName);
 
 				if(i == 2)
 				{
 					AddItemToRobot(2, "left_arm", "LeftWeapon", partName);
+					Utility.player2LeftWeapon = part.gameObject.transform;
 				}
 				
 				// right arm
 				if(i == 3)
 				{
 					AddItemToRobot(2, "right_arm", "RightWeapon", partName);
+					Utility.player2RightWeapon = part.gameObject.transform;
 				}
 				
 				// special
@@ -600,6 +626,7 @@ public class TwoPlayerCustom2 : MonoBehaviour
 					if(partName == "Wings") AddItemToRobot(2, "body", "Wings", partName);
 					if(partName == "Armor") AddItemToRobot(2, "body", "Armor", partName);
 					if(partName == "Booster") AddItemToRobot(2, "body", "Wings", partName);
+					Utility.player2Special = part.gameObject.transform;
 				}
 			}
 		}

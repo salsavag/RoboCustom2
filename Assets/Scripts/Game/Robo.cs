@@ -6,26 +6,28 @@ public class Robo : MonoBehaviour
 	bool grounded;
 	public float jumpSpeed = 20.0f;
 	public float moveSpeed = 2.0f;
+	public float thrustCD;
+	public float thrustTime;
+	public float thrustSpeed;
 
-	public float projSpeed;
-	public Transform projectile;
-	public Weapon RightWeapon;
-	public Weapon LeftWeapon;
-	public float fireRate;
+	public Transform bodyPoint;
+	public Transform weaponLeftPoint;
+	public Transform weaponRightPoint;
+	public Transform specialPoint;
+
 	public Transform enemyBot;
+	Weapon RightWeapon;
+	Weapon LeftWeapon;
+	int Special;
+	int Body;
 
-	public float health;
-	float leftFireTimer = 0.0f;
-	float rightFireTimer = 0.0f;
-
+	float health;
 	bool thrusting;
 	float thrustTimer;
 	float thrustStart;
 	Vector3 thrustDir;
 
-	public float thrustCD;
-	public float thrustTime;
-	public float thrustSpeed;
+
 
 	void Start () {
 		health = 300.0f;
@@ -33,6 +35,31 @@ public class Robo : MonoBehaviour
 		thrusting = false;
 		thrustTimer = 0.0f;
 		thrustStart = 0.0f;
+	}
+
+	public void CustomizeRobot(Transform body, Transform weaponLeft, Transform weaponRight, Transform special, int primary, int secondary, Transform enemy)
+	{
+		Transform newBody = Instantiate(body, bodyPoint.position, Quaternion.identity) as Transform;
+		newBody.transform.parent = bodyPoint;
+		//Body = newBody.GetComponent<Body>();
+
+		Transform newWeapon = Instantiate(weaponLeft, weaponLeftPoint.position, Quaternion.identity) as Transform;
+		newWeapon.transform.parent = weaponLeftPoint;
+		LeftWeapon = newWeapon.GetComponent<Weapon>();
+
+		newWeapon = Instantiate(weaponRight, weaponRightPoint.position, Quaternion.identity) as Transform;
+		newWeapon.transform.parent = weaponRightPoint;
+		RightWeapon = newWeapon.GetComponent<Weapon>();
+
+		Transform newSpecial = Instantiate(special, specialPoint.position, Quaternion.identity) as Transform;
+		newSpecial.transform.parent = specialPoint;
+		//Special = newSpecial.GetComponent<Special>();
+
+		enemyBot = enemy;
+
+		Utility.SetColors();
+		Utility.SetPrimary(gameObject, Utility.colors[primary]);
+		Utility.SetSecondary(gameObject, Utility.colors[secondary]);
 	}
 
 	void FixedUpdate()
@@ -45,10 +72,6 @@ public class Robo : MonoBehaviour
 		float angle = Vector3.Angle(transform.forward, toward) * Mathf.Sign(Vector3.Cross(transform.forward, toward).y);
 		
 		transform.RotateAround(transform.position, Vector3.up, angle);
-		if(leftFireTimer > 0.0f)
-			leftFireTimer -= Time.deltaTime;
-		if(rightFireTimer > 0.0f)
-			rightFireTimer -= Time.deltaTime;
 
 		if(thrustTimer > 0.0f)
 		{

@@ -15,7 +15,8 @@ public class Weapon : MonoBehaviour {
 
 	protected virtual void Start () {
 		coolDown = 0.0f;
-		target = transform.parent.GetComponent<Robo>().enemyBot;
+		if(transform.parent != null && transform.parent.parent != null && transform.parent.parent.GetComponent<Robo>() != null)
+			target = transform.parent.parent.GetComponent<Robo>().enemyBot;
 	}
 
 	protected virtual void Update () {
@@ -29,15 +30,20 @@ public class Weapon : MonoBehaviour {
 	{
 		if(coolDown <= 0.0f)
 		{
-			CreateProj();
+			FireProj();
 			coolDown = fireRate;
 		}
+	}
+
+	protected virtual void FireProj()
+	{
+		CreateProj();
 	}
 
 	protected void CreateProj()
 	{
 		Transform newProj = GameObject.Instantiate(proj, firePos.position, firePos.rotation) as Transform;
 		Projectile projComp = newProj.GetComponent<Projectile>();
-		projComp.Init(projSpeed, damage, transform.parent.GetComponent<Robo>(), target);
+		projComp.Init(projSpeed, damage, transform.parent.parent.GetComponent<Robo>(), target);
 	}
 }
