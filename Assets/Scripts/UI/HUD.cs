@@ -10,11 +10,17 @@ public class HUD : MonoBehaviour {
 	public Texture totalHealth;
 	public Texture overlay;
 
-	private int spacing = Screen.width / 100;
+	private float spacing = Screen.width / 100;
+
+	private float buttonWidth;
+	private float buttonHeight = Screen.height / 20;
+
+	public bool paused;
 
 	// Use this for initialization
 	void Start () {
-	
+		buttonWidth = Screen.width * .4f - spacing * 2;
+		paused = false;
 	}
 	
 	// Update is called once per frame
@@ -25,6 +31,15 @@ public class HUD : MonoBehaviour {
 			TakeDamagePlayer1(amount);
 			TakeDamagePlayer2(amount);
 		}
+		if (Input.GetKeyDown (KeyCode.P))
+		{
+			Pause();
+		}
+	}
+
+	public void Pause()
+	{
+		paused = true;
 	}
 
 	public void TakeDamagePlayer1(float amount)
@@ -50,6 +65,19 @@ public class HUD : MonoBehaviour {
 		GUI.DrawTexture(new Rect(Screen.width - spacing - (Screen.width - 4*spacing) / 2, spacing, (Screen.width - 4*spacing) / 2, spacing*2 ), totalHealth);
 		GUI.DrawTexture(new Rect(Screen.width - spacing - (Screen.width - 4*spacing) / 2 + ((Screen.width - 4*spacing) / 2 - (Screen.width - 4*spacing) / 2 * (player2Health / 100)), spacing, (Screen.width - 4*spacing) / 2 * (player2Health / 100), spacing*2 ), healthLeft);
 
-	
+		if (paused)
+		{
+			GUI.BeginGroup(new Rect(Screen.width * .3f, Screen.height * .3f, Screen.width * .4f, Screen.height * .4f));
+			GUI.Box (new Rect(0,0,Screen.width * .4f, Screen.height * .2f), "Pause Menu");
+			if(GUI.Button (new Rect(spacing, spacing * 3, buttonWidth, buttonHeight), "Resume"))
+			{
+				paused = false;
+			}
+			if(GUI.Button (new Rect(spacing, spacing * 4 + buttonHeight, buttonWidth, buttonHeight), "Quit"))
+			{
+				Application.LoadLevel("MainMenu");
+			}
+			GUI.EndGroup();
+		}
 	}
 }
